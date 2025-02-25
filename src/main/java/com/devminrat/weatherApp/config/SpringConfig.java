@@ -1,6 +1,8 @@
 package com.devminrat.weatherApp.config;
 
 
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.FlywayException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -70,10 +72,30 @@ public class SpringConfig implements WebMvcConfigurer {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("hibernate.driver_class"));
         dataSource.setUrl(environment.getRequiredProperty("hibernate.connection.url"));
+        dataSource.setSchema(environment.getRequiredProperty("hibernate.default_schema"));
         dataSource.setUsername(environment.getRequiredProperty("hibernate.connection.username"));
         dataSource.setPassword(environment.getRequiredProperty("hibernate.connection.password"));
 
         return dataSource;
+    }
+
+    @Bean
+    public Flyway flyway() {
+        System.out.println("Initializing Flyway...");
+        try {
+            Flyway flyway = Flyway.configure()
+                    .dataSource(dataSource())
+                    .schemas("weather")
+                    .locations("classpath:db/migration")
+                    .load();
+            flyway.migrate();
+            System.out.println("Flyway initialized successfully.");
+            return flyway;
+        } catch (Exception e) {
+            System.out.println("Flyway initialization failed.");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private Properties hibernateProperties() {
