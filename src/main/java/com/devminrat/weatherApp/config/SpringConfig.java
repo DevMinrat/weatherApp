@@ -81,21 +81,13 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public Flyway flyway() {
-        System.out.println("Initializing Flyway...");
-        try {
-            Flyway flyway = Flyway.configure()
-                    .dataSource(dataSource())
-                    .schemas("weather")
-                    .locations("classpath:db/migration")
-                    .load();
-            flyway.migrate();
-            System.out.println("Flyway initialized successfully.");
-            return flyway;
-        } catch (Exception e) {
-            System.out.println("Flyway initialization failed.");
-            e.printStackTrace();
-            throw e;
-        }
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource())
+                .schemas("weather")
+                .locations("classpath:db/migration")
+                .load();
+        flyway.migrate();
+        return flyway;
     }
 
     private Properties hibernateProperties() {
