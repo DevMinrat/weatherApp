@@ -31,6 +31,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Location> locations;
 
-    @OneToOne(mappedBy = "owner")
-    private Session session;
+    @OneToMany(mappedBy = "owner")
+    private List<Session> session;
 }

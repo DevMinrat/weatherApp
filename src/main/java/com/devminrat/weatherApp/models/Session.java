@@ -15,11 +15,14 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @Column(name = "session_id", nullable = false, unique = true)
+    private String sessionId;
+
+    @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "id")
     private User owner;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime expiresAt;
 
 }

@@ -11,6 +11,11 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "/sign-in";
+        return "auth/sign-in";
+    }
+
+    @GetMapping("/registration")
+    public String registration() {
+        return "auth/sign-up";
     }
 }
