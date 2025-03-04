@@ -6,11 +6,14 @@ import com.devminrat.weatherApp.repositories.SessionRepository;
 import com.devminrat.weatherApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
@@ -25,6 +28,7 @@ public class SessionService {
         return UUID.randomUUID().toString();
     }
 
+    @Transactional
     public Session createSession(User user) {
         Session session = new Session();
         session.setSessionId(generateSessionId());
@@ -34,8 +38,13 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
-    public Session getSession(String sessionId) {
+    public Optional<Session> findValidSession(String sessionId) {
+        return sessionRepository.findValidSession(sessionId, LocalDateTime.now());
+    }
 
+    @Transactional
+    public void delete(String sessionId) {
+        sessionRepository.deleteBySessionId(sessionId);
     }
 
 }

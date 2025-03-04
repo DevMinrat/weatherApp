@@ -1,8 +1,8 @@
 package com.devminrat.weatherApp.config;
 
 
+import com.devminrat.weatherApp.utils.SessionInterceptor;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.FlywayException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,10 +16,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
@@ -29,17 +26,19 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.devminrat.weatherApp")
-@PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("com.devminrat.weatherApp.repositories")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment environment;
+    private final SessionInterceptor sessionInterceptor;
 
-    public SpringConfig(final ApplicationContext applicationContext, final Environment environment) {
+    public SpringConfig(final ApplicationContext applicationContext, final Environment environment, SessionInterceptor sessionInterceptor) {
         this.applicationContext = applicationContext;
         this.environment = environment;
+        this.sessionInterceptor = sessionInterceptor;
     }
 
     @Bean
@@ -123,6 +122,13 @@ public class SpringConfig implements WebMvcConfigurer {
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return transactionManager;
+    }
+
+    @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(sessionInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/auth/**", "/static/**");
     }
 
 }
