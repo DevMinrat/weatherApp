@@ -20,35 +20,41 @@
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <div class="alert alert-danger" role="alert">
-                Passwords don't match.
+                Username already exists
             </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <form action="#" class="mt-4">
+            <form th:method="POST" th:action="@{/auth/registration}" th:object="${authForm}" class="mt-4">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-group has-validation">
-                        <input type="text" class="form-control is-invalid" id="username" name="username" required value=""/>
-                        <div class="invalid-feedback">
-                            Account with this email already exists.
+                        <input type="text" class="form-control is-invalid" id="username" name="username" required
+                               value=""/>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name
+                            Error
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group has-validation">
-                        <input type="password" class="form-control is-invalid" id="password" name="password" required value=""/>
-                        <div class="invalid-feedback">
-                            Password must be at least 4 characters long.
-                        </div>
+                        <input type="password" class="form-control is-invalid" id="password" name="password" required
+                               value=""/>
+
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="repeat-password" class="form-label">Repeat password</label>
-                    <input type="password" class="form-control" id="repeat-password" name="password" required value=""/>
+
+                    <div class="input-group has-validation">
+                        <input type="password" class="form-control" id="password" name="password" required value=""/>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                            Name Error
+                        </div>
+                    </div>
                 </div>
 
                 <input type="hidden" name="redirect_to" value="http://localhost/"/>

@@ -44,7 +44,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             }
         }
 
-        response.sendRedirect("/auth/sign-in");
+        response.sendRedirect(request.getContextPath() + "/auth/login");
         return false;
     }
 

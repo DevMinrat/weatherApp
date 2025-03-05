@@ -2,12 +2,12 @@ package com.devminrat.weatherApp.config;
 
 
 import com.devminrat.weatherApp.utils.SessionInterceptor;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManagerFactory;
 import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -35,7 +35,8 @@ public class SpringConfig implements WebMvcConfigurer {
     private final Environment environment;
     private final SessionInterceptor sessionInterceptor;
 
-    public SpringConfig(final ApplicationContext applicationContext, final Environment environment, SessionInterceptor sessionInterceptor) {
+    public SpringConfig(final ApplicationContext applicationContext, final Environment environment,
+                        @Lazy SessionInterceptor sessionInterceptor) {
         this.applicationContext = applicationContext;
         this.environment = environment;
         this.sessionInterceptor = sessionInterceptor;
@@ -85,9 +86,9 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public Flyway flyway() {
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure()
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .schemas("weather")
                 .locations("classpath:db/migration")
                 .load();
@@ -104,6 +105,7 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
@@ -117,18 +119,15 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-
-        return transactionManager;
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/auth/**", "/static/**");
+                .excludePathPatterns("/auth/**", "/static/**", "/resources/**", "/css/**", "/js/**", "/images/**");
     }
 
 }

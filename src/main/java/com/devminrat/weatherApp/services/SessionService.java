@@ -5,6 +5,7 @@ import com.devminrat.weatherApp.models.User;
 import com.devminrat.weatherApp.repositories.SessionRepository;
 import com.devminrat.weatherApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@DependsOn("entityManagerFactory")
 @Transactional(readOnly = true)
 public class SessionService {
     private final SessionRepository sessionRepository;
