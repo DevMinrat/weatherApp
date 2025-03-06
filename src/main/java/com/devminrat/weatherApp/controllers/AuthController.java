@@ -32,21 +32,21 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("authForm", new AuthFormDTO());
+    public String login(@ModelAttribute("authForm") AuthFormDTO authForm) {
         return "auth/sign-in";
     }
 
     @PostMapping("/login")
-    public String login(@Valid AuthFormDTO formDTO,
+    public String login(@ModelAttribute("authForm") @Valid AuthFormDTO authForm,
                         BindingResult bindingResult,
                         HttpServletResponse response) {
         if (bindingResult.hasErrors())
             return "auth/sign-in";
 
-        User user = userService.findUserByLogin(formDTO.getLogin()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.findUserByLogin(authForm.getLogin())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getPassword().equals(formDTO.getPassword())) {
+        if (!user.getPassword().equals(authForm.getPassword())) {
             throw new RuntimeException("Wrong password");
         }
 

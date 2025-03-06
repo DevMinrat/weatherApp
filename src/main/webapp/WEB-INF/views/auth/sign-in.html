@@ -29,11 +29,10 @@
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <form th:method="POST" th:action="@{/auth/login}" th:object="${authForm}" class="mt-4">
                 <div class="mb-3">
-                    <label for="login" class="form-label">Username</label>
-
+                    <label for="login" class="form-label">Login</label>
                     <div class="input-group has-validation">
-                        <input type="text" class="form-control is-invalid" id="login" name="login" required
-                               value=""/>
+                        <input type="text" th:class="'form-control '+${#fields.hasErrors('login') ? 'is-invalid' : ''}"
+                               id="login" name="login" th:field="*{login}" required value=""/>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name
                             Error
                         </div>
@@ -43,7 +42,9 @@
                     <label for="password" class="form-label">Password</label>
 
                     <div class="input-group has-validation">
-                        <input type="password" class="form-control" id="password" name="password" required value=""/>
+                        <input type="password"
+                               th:class="'form-control '+${#fields.hasErrors('password') ? 'is-invalid' : ''}"
+                               name="password" id="password" th:field="*{password}" required value=""/>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                             Name Error
                         </div>
