@@ -6,6 +6,7 @@ import com.devminrat.weatherApp.models.Session;
 import com.devminrat.weatherApp.models.User;
 import com.devminrat.weatherApp.services.SessionService;
 import com.devminrat.weatherApp.services.UserService;
+import com.devminrat.weatherApp.utils.UserValidator;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,15 +22,17 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+    private final UserValidator userValidator;
     @Value("${app.cookie.session}")
     private String cookieName;
     private final SessionService sessionService;
     private final UserService userService;
 
     @Autowired
-    public AuthController(final SessionService sessionService, final UserService userService) {
+    public AuthController(final SessionService sessionService, final UserService userService, UserValidator userValidator) {
         this.sessionService = sessionService;
         this.userService = userService;
+        this.userValidator = userValidator;
     }
 
     @GetMapping("/login")
@@ -43,22 +46,33 @@ public class AuthController {
                               HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView("auth/sign-in");
 
-        if (bindingResult.hasErrors())
+        userValidator.validate(new User(authForm.getLogin(), authForm.getPassword()), bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            if (bindingResult.hasFieldErrors("login")) {
+                modelAndView.addObject("userError", "Invalid login");
+            }
+            if (bindingResult.hasFieldErrors("password")) {
+                modelAndView.addObject("passwordError", "Invalid password");
+            }
             return modelAndView;
+        }
 
-        Optional<User> user = userService.findUserByLogin(authForm.getLogin());
+        Optional<User> existingUser = userService.findUserByLogin(authForm.getLogin());
 
-        if (user.isEmpty()) {
+        if (existingUser.isEmpty()) {
             modelAndView.addObject("userError", "Invalid login");
             return modelAndView;
         }
 
-        if (!user.get().getPassword().equals(authForm.getPassword())) {
+        userValidator.validatePassword(existingUser.get(), authForm.getPassword(), bindingResult);
+
+        if (bindingResult.hasErrors()) {
             modelAndView.addObject("passwordError", "Invalid password");
             return modelAndView;
         }
 
-        initSession(response, user.get());
+        initSession(response, existingUser.get());
 
         return new ModelAndView("redirect:/weather");
     }
@@ -77,14 +91,16 @@ public class AuthController {
         if (bindingResult.hasErrors())
             return modelAndView;
 
-        boolean isLoginExist = userService.findUserByLogin(authForm.getLogin()).isPresent();
+        User user = new User(authForm.getLogin(), authForm.getPassword());
+        userValidator.validate(user, bindingResult);
+        userValidator.validateLogin(user, bindingResult);
 
-        if (isLoginExist) {
-            modelAndView.addObject("userNameError", "Login already exists");
+        if (bindingResult.hasErrors()) {
+            if (bindingResult.hasFieldErrors("login")) {
+                modelAndView.addObject("userNameError", "Login already exists");
+            }
             return modelAndView;
         }
-
-        User user = new User(authForm.getLogin(), authForm.getPassword());
 
         userService.save(user);
         initSession(response, user);
@@ -98,6 +114,7 @@ public class AuthController {
         Cookie sessionCookie = new Cookie(cookieName, session.getSessionId());
         sessionCookie.setPath("/");
         sessionCookie.setHttpOnly(true);
+        sessionCookie.setSecure(true);
         sessionCookie.setMaxAge(1800);
         response.addCookie(sessionCookie);
     }
