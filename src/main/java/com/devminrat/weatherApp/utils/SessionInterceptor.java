@@ -35,15 +35,16 @@ public class SessionInterceptor implements HandlerInterceptor {
                 String sessionId = sessionCookie.get().getValue();
                 Optional<Session> session = sessionService.findValidSession(sessionId);
 
-                session.ifPresent(s -> request.setAttribute("currentUser", s.getOwner()));
-                return true;
-            } else {
-                Cookie cookie = new Cookie(cookieName, "");
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
+                if (session.isPresent()) {
+                    session.ifPresent(s -> request.setAttribute("currentUser", s.getOwner()));
+                    return true;
+                } else {
+                    Cookie cookie = new Cookie(cookieName, "");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
             }
         }
-
         response.sendRedirect(request.getContextPath() + "/auth/login");
         return false;
     }

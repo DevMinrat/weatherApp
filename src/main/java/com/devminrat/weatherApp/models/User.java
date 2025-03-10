@@ -1,17 +1,21 @@
 package com.devminrat.weatherApp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 
     @Id
     @Column

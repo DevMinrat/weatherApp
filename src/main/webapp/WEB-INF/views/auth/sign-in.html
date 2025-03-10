@@ -17,10 +17,15 @@
 
     <h2 class="text-center mb-5">Sign In</h2>
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <div class="alert alert-danger" role="alert">
-                Invalid username or password.
+    <div th:if="${userError != null || passwordError != null}" style="color: red;">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+                <div th:if="userError != null" class="alert alert-danger" role="alert">
+                    Invalid username.
+                </div>
+                <div th:unless="passwordError" class="alert alert-danger" role="alert">
+                    Invalid password.
+                </div>
             </div>
         </div>
     </div>
@@ -51,10 +56,9 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="redirect_to" value="http://localhost/"/>
-
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign In</button>
-                <p class="mt-2 text-center">Don't have an account? <a href="#">Sign up here</a></p>
+                <p class="mt-2 text-center">Don't have an account? <a th:href="@{/auth/registration}">Sign up here</a>
+                </p>
             </form>
         </div>
     </div>

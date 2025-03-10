@@ -35,7 +35,7 @@ public class SessionService {
         Session session = new Session();
         session.setSessionId(generateSessionId());
         session.setOwner(user);
-        session.setExpiresAt(LocalDateTime.now().minusMinutes(30));
+        session.setExpiresAt(LocalDateTime.now().plusMinutes(30));
 
         return sessionRepository.save(session);
     }

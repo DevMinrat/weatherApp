@@ -17,7 +17,7 @@
 
     <h2 class="text-center mb-5">Sign Up</h2>
 
-    <div class="row justify-content-center">
+    <div th:if="${userNameError != null}" class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <div class="alert alert-danger" role="alert">
                 Username already exists
@@ -29,9 +29,11 @@
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <form th:method="POST" th:action="@{/auth/registration}" th:object="${authForm}" class="mt-4">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="login" class="form-label">Login</label>
                     <div class="input-group has-validation">
-                        <input type="text" class="form-control is-invalid" id="username" name="username" required
+                        <input type="text"
+                               th:class="'form-control '+${#fields.hasErrors('login') ? 'is-invalid' : ''}"
+                               id="login" name="login" th:field="*{login}" required
                                value=""/>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name
                             Error
@@ -41,26 +43,26 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group has-validation">
-                        <input type="password" class="form-control is-invalid" id="password" name="password" required
+                        <input type="password"
+                               th:class="'form-control '+${#fields.hasErrors('password') ? 'is-invalid' : ''}"
+                               id="password" name="password" th:field="*{password}" required
                                value=""/>
-
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="repeat-password" class="form-label">Repeat password</label>
-
-                    <div class="input-group has-validation">
-                        <input type="password" class="form-control" id="password" name="password" required value=""/>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                             Name Error
                         </div>
                     </div>
                 </div>
-
-                <input type="hidden" name="redirect_to" value="http://localhost/"/>
+                <div class="mb-3">
+                    <label for="repeat-password" class="form-label">Repeat password</label>
+                    <div class="input-group has-validation">
+                        <input type="password" class="form-control" id="repeat-password" name="repeat-password" required
+                               value=""/>
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
-                <p class="mt-2 text-center">Already have an account? <a href="#">Sign in here</a></p>
+                <p class="mt-2 text-center">Already have an account? <a th:href="@{/auth/registration}">Sign in here</a>
+                </p>
             </form>
         </div>
     </div>
