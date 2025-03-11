@@ -37,6 +37,7 @@ public class SpringConfig implements WebMvcConfigurer {
     private final Environment environment;
     private final SessionInterceptor sessionInterceptor;
 
+    @Autowired
     public SpringConfig(final ApplicationContext applicationContext, final Environment environment,
                         @Lazy SessionInterceptor sessionInterceptor) {
         this.applicationContext = applicationContext;
