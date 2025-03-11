@@ -27,7 +27,8 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <form th:method="POST" th:action="@{/auth/registration}" th:object="${authForm}" class="mt-4">
+            <form th:method="POST" th:action="@{/auth/registration}" th:object="${authForm}" id="registration-form"
+                  class="mt-4">
                 <div class="mb-3">
                     <label for="login" class="form-label">Login</label>
                     <div class="input-group has-validation">
@@ -57,6 +58,7 @@
                     <div class="input-group has-validation">
                         <input type="password" class="form-control" id="repeat-password" name="repeat-password" required
                                value=""/>
+                        <div style="display: none" class="invalid-feedback" id="confirm-password">Passwords don`t match</div>
                     </div>
                 </div>
 
@@ -68,5 +70,6 @@
     </div>
 </div>
 
+<script th:src="@{/resources/js/scripts.js}"></script>
 </body>
 </html>
