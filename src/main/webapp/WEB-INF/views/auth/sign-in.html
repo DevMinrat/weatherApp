@@ -20,10 +20,10 @@
     <div th:if="${userError != null || passwordError != null}" style="color: red;">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-                <div th:if="userError != null" class="alert alert-danger" role="alert">
+                <div th:if="${userError != null}" class="alert alert-danger" role="alert">
                     Invalid username.
                 </div>
-                <div th:unless="passwordError" class="alert alert-danger" role="alert">
+                <div th:unless="${userError != null}" class="alert alert-danger" role="alert">
                     Invalid password.
                 </div>
             </div>

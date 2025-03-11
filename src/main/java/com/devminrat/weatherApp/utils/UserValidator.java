@@ -12,6 +12,10 @@ import java.util.Optional;
 
 @Component
 public class UserValidator implements Validator {
+    public static final String USER_ERROR = "userError";
+    public static final String PASSWORD_ERROR = "passwordError";
+    public static final String USER_NAME_ERROR = "userNameError";
+
     private final UserService userService;
 
     @Autowired
@@ -45,7 +49,7 @@ public class UserValidator implements Validator {
     }
 
     public void validatePassword(User user, String password, Errors errors) {
-        if (!user.getPassword().equals(password)) {
+        if (!userService.checkPassword(password, user.getPassword())) {
             errors.rejectValue("password", "password.invalid", "Password does not match");
         }
     }

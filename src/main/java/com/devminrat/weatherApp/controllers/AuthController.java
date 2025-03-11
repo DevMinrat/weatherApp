@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
+import static com.devminrat.weatherApp.utils.UserValidator.*;
+
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -50,10 +52,10 @@ public class AuthController {
 
         if (bindingResult.hasErrors()) {
             if (bindingResult.hasFieldErrors("login")) {
-                modelAndView.addObject("userError", "Invalid login");
+                modelAndView.addObject(USER_ERROR, "Invalid login");
             }
             if (bindingResult.hasFieldErrors("password")) {
-                modelAndView.addObject("passwordError", "Invalid password");
+                modelAndView.addObject(PASSWORD_ERROR, "Invalid password");
             }
             return modelAndView;
         }
@@ -61,14 +63,14 @@ public class AuthController {
         Optional<User> existingUser = userService.findUserByLogin(authForm.getLogin());
 
         if (existingUser.isEmpty()) {
-            modelAndView.addObject("userError", "Invalid login");
+            modelAndView.addObject(USER_ERROR, "Invalid login");
             return modelAndView;
         }
 
         userValidator.validatePassword(existingUser.get(), authForm.getPassword(), bindingResult);
 
         if (bindingResult.hasErrors()) {
-            modelAndView.addObject("passwordError", "Invalid password");
+            modelAndView.addObject(PASSWORD_ERROR, "Invalid password");
             return modelAndView;
         }
 
@@ -97,7 +99,7 @@ public class AuthController {
 
         if (bindingResult.hasErrors()) {
             if (bindingResult.hasFieldErrors("login")) {
-                modelAndView.addObject("userNameError", "Login already exists");
+                modelAndView.addObject(USER_NAME_ERROR, "Login already exists");
             }
             return modelAndView;
         }
