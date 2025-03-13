@@ -42,6 +42,7 @@ public class AuthControllerUT {
     private BindingResult bindingResult;
     private MockHttpServletResponse response;
 
+    private String cookieName;
 
     @BeforeEach
     public void setUp() {
@@ -51,7 +52,7 @@ public class AuthControllerUT {
         bindingResult = new BeanPropertyBindingResult(authForm, "authForm");
         response = new MockHttpServletResponse();
 
-        ReflectionTestUtils.setField(authController, "cookieName", "SESSION_COOKIE");
+        cookieName = (String) ReflectionTestUtils.getField(authController, "COOKIE_NAME");
     }
 
     @Test
@@ -71,7 +72,7 @@ public class AuthControllerUT {
     }
 
     private void assertCookieIsSet(MockHttpServletResponse response) {
-        Cookie cookie = response.getCookie("SESSION_COOKIE");
+        Cookie cookie = response.getCookie(cookieName);
         assertNotNull(cookie);
         assertEquals("/", cookie.getPath());
         assertTrue(cookie.isHttpOnly());
@@ -142,11 +143,22 @@ public class AuthControllerUT {
 
         ReflectionTestUtils.invokeMethod(authController, "initSession", response, user);
 
-        Cookie cookie = response.getCookie("SESSION_COOKIE");
+        Cookie cookie = response.getCookie(cookieName);
         assertNotNull(cookie);
         assertEquals("sessionId", cookie.getValue());
         assertTrue(cookie.getSecure());
         assertEquals(1800, cookie.getMaxAge());
+    }
+
+    @Test
+    void test_logout_ShouldRedirectToLogin() {
+        ModelAndView mav = authController.logout("sessionId", response);
+
+        Cookie cookie = response.getCookie(cookieName);
+        assertNull(cookie.getValue());
+        assertEquals(0, cookie.getMaxAge());
+
+        assertEquals("auth/sign-in", mav.getViewName());
     }
 
 }

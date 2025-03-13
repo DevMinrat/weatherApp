@@ -11,7 +11,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +24,7 @@ import static com.devminrat.weatherApp.utils.UserValidator.*;
 @RequestMapping("/auth")
 public class AuthController {
     private final UserValidator userValidator;
-    @Value("${app.cookie.session}")
-    private String cookieName;
+    private static final String COOKIE_NAME = "WEATHER_APP_SESSION_ID";
     private final SessionService sessionService;
     private final UserService userService;
 
@@ -110,10 +108,25 @@ public class AuthController {
         return new ModelAndView("redirect:/weather");
     }
 
+    @PostMapping("/logout")
+    public ModelAndView logout(@CookieValue(COOKIE_NAME) String sessionId, HttpServletResponse response) {
+
+        if (sessionId != null && !sessionId.isEmpty()) {
+            sessionService.delete(sessionId);
+        }
+
+        Cookie cookie = new Cookie(COOKIE_NAME, null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return new ModelAndView("auth/sign-in");
+    }
+
     private void initSession(HttpServletResponse response, User user) {
         Session session = sessionService.createSession(user);
 
-        Cookie sessionCookie = new Cookie(cookieName, session.getSessionId());
+        Cookie sessionCookie = new Cookie(COOKIE_NAME, session.getSessionId());
         sessionCookie.setPath("/");
         sessionCookie.setHttpOnly(true);
         sessionCookie.setSecure(true);
