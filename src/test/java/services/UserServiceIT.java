@@ -1,8 +1,9 @@
+package services;
+
 import com.devminrat.weatherApp.config.TestConfig;
 import com.devminrat.weatherApp.models.User;
 import com.devminrat.weatherApp.services.UserService;
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

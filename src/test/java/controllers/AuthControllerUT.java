@@ -1,3 +1,5 @@
+package controllers;
+
 import com.devminrat.weatherApp.controllers.AuthController;
 import com.devminrat.weatherApp.dto.AuthFormDTO;
 import com.devminrat.weatherApp.models.Session;
@@ -16,7 +18,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 

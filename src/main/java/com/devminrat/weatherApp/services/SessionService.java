@@ -18,12 +18,10 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class SessionService {
     private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public SessionService(SessionRepository sessionRepository, UserRepository userRepository) {
+    public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
-        this.userRepository = userRepository;
     }
 
     public String generateSessionId() {
