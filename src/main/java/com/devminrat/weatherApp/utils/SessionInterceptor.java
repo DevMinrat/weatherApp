@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     @Override
+    @Transactional
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -36,7 +38,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                 Optional<Session> session = sessionService.findValidSession(sessionId);
 
                 if (session.isPresent()) {
-                    session.ifPresent(s -> request.setAttribute("currentUser", s.getOwner()));
+                    request.setAttribute("currentUser", session.get().getOwner());
                     return true;
                 } else {
                     Cookie cookie = new Cookie(cookieName, "");

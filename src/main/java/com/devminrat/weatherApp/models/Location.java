@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -23,6 +24,7 @@ public class Location {
 
     @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "id")
+    @ToString.Exclude
     private User owner;
 
     @NotEmpty(message = "latitude should not be empty")

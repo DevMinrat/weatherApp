@@ -3,6 +3,7 @@ package com.devminrat.weatherApp.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -29,8 +30,10 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "owner")
+    @ToString.Exclude
     private List<Location> locations;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
+    @ToString.Exclude
     private List<Session> session;
 }

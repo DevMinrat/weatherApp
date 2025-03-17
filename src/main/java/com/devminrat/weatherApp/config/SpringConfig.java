@@ -29,7 +29,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.devminrat.weatherApp")
 @PropertySource("classpath:application.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories("com.devminrat.weatherApp.repositories")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {

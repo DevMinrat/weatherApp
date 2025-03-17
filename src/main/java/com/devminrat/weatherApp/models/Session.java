@@ -2,6 +2,7 @@ package com.devminrat.weatherApp.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -20,9 +21,11 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "id")
+    @ToString.Exclude
     private User owner;
 
     @Column(nullable = false)
+    @ToString.Exclude
     private LocalDateTime expiresAt;
 
 }
