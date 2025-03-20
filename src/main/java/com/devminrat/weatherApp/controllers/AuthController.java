@@ -120,7 +120,7 @@ public class AuthController {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
 
-        return new ModelAndView("auth/sign-in");
+        return new ModelAndView("redirect:/auth/login");
     }
 
     private void initSession(HttpServletResponse response, User user) {

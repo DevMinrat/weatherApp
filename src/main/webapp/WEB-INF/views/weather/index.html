@@ -11,12 +11,15 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img th:src="@{/resources/images/weather-app.png}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{/resources/images/weather-app.png}" alt="" width="30" height="24"
+                 class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center">
             <span class="navbar-text me-3" th:text="${userLogin}">User login</span>
-            <button class="btn btn-outline-danger">Sign out</button>
+            <form th:method="POST" th:action="@{/auth/logout}">
+                <button class="btn btn-outline-danger">Sign out</button>
+            </form>
         </div>
     </div>
 </nav>
