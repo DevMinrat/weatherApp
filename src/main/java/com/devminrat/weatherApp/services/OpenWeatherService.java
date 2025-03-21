@@ -1,5 +1,6 @@
 package com.devminrat.weatherApp.services;
 
+import com.devminrat.weatherApp.dto.WeatherResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,14 @@ public class OpenWeatherService {
         this.webClient = webClient;
     }
 
-    public Mono<String> getWeatherByCity(String city) {
+    public Mono<WeatherResponseDTO> getWeatherByCity(String city) {
         String url = String.format("%s?q=%s&appid=%s", BASE_URL, city, apiKey);
-        return webClient.get().uri(url).retrieve().bodyToMono(String.class);
+        return webClient.get().uri(url).retrieve().bodyToMono(WeatherResponseDTO.class);
+    }
+
+    public Mono<WeatherResponseDTO> getWeatherByCoordinates(double lat, double lon) {
+        String url = String.format("%s?lat=%s&lon=%s&appid=%s", BASE_URL, lat, lon, apiKey);
+        return webClient.get().uri(url).retrieve().bodyToMono(WeatherResponseDTO.class);
     }
 
 }
