@@ -27,14 +27,14 @@
 <section id="page-content">
     <div class="container mt-4">
         <div class="d-flex my-4">
-            <div class="input-group location-search-input-group me-3">
-                <input class="form-control" type="text" name="name" placeholder="Enter location" required>
+            <form class="input-group location-search-input-group me-3" th:method="POST" th:action="@{/weather/search}">
+                <input class="form-control" type="text" name="city" id="city" placeholder="Enter location" th:value="${city}" required>
                 <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
                         onclick="this.previousElementSibling.value=''">
                     &times;
                 </button>
-            </div>
-            <button class="btn btn-outline-success">Search</button>
+                <button class="btn btn-outline-success">Search</button>
+            </form>
         </div>
 
         <div>

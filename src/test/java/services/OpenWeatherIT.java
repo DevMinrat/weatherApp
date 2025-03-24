@@ -1,6 +1,7 @@
 package services;
 
 import com.devminrat.weatherApp.config.TestConfig;
+import com.devminrat.weatherApp.dto.CityDTO;
 import com.devminrat.weatherApp.dto.WeatherResponseDTO;
 import com.devminrat.weatherApp.services.OpenWeatherService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.Disposable;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,14 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class OpenWeatherIT {
     @Autowired
     private OpenWeatherService openWeatherService;
-    @Autowired
-    private Flyway flyway;
-
-    @BeforeEach
-    public void setUp() {
-        flyway.clean();
-        flyway.migrate();
-    }
 
     @Test
     public void test_getWeatherForecast_London_byCity() {
@@ -48,5 +45,20 @@ public class OpenWeatherIT {
 
         assertNotNull(res);
         assertEquals("London", res.getName());
+    }
+
+    @Test
+    public void test_getWeatherForecast_London_byCityAndCoordinates() {
+        List<CityDTO> cities = openWeatherService.getCitiesByName("london").toStream().toList();
+
+        assertNotNull(cities);
+        assertEquals(3, cities.size());
+        assertEquals("London", cities.getFirst().getName());
+        assertEquals("England", cities.getFirst().getState());
+        assertEquals("GB", cities.getFirst().getCountry());
+
+        assertEquals("London", cities.getLast().getName());
+        assertEquals("Kentucky", cities.getLast().getState());
+        assertEquals("US", cities.getLast().getCountry());
     }
 }
