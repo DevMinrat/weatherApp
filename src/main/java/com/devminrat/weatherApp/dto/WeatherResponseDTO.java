@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Data
 @ToString
 public class WeatherResponseDTO {
@@ -15,8 +17,8 @@ public class WeatherResponseDTO {
     @Data
     @ToString
     public static class Coord {
-        private double lon;
-        private double lat;
+        private BigDecimal lon;
+        private BigDecimal lat;
     }
 
     @Data

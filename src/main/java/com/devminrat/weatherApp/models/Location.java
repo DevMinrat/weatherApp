@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "locations")
@@ -27,11 +29,9 @@ public class Location {
     @ToString.Exclude
     private User owner;
 
-    @NotEmpty(message = "latitude should not be empty")
-    @Column
-    private double latitude;
+    @Column(precision = 10, scale = 6)
+    private BigDecimal latitude;
 
-    @NotEmpty(message = "longitude should not be empty")
-    @Column
-    private double longitude;
+    @Column(precision = 10, scale = 6)
+    private BigDecimal longitude;
 }

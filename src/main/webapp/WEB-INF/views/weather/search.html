@@ -11,12 +11,15 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{/resources/images/weather-app.png}" alt="" width="30" height="24"
+                 class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center">
-            <span class="navbar-text me-3">zhukovsd</span>
-            <button class="btn btn-outline-danger">Sign out</button>
+            <span class="navbar-text me-3" th:text="${userLogin}">User login</span>
+            <form th:method="POST" th:action="@{/auth/logout}">
+                <button class="btn btn-outline-danger">Sign out</button>
+            </form>
         </div>
     </div>
 </nav>
@@ -45,9 +48,12 @@
                             <p class="card-text mb-1" th:text="'Longitude: ' + ${city.getLon()}">Longitude</p>
                             <p class="card-text mb-1" th:text="'Country: ' + ${city.getCountry()}">Country</p>
                             <p class="card-text mb-3" th:text="'State: ' + ${city.getState()}">State</p>
-                            <div class="mt-auto">
-                                <button class="btn btn-primary w-100">Add</button>
-                            </div>
+                            <form th:action="@{/weather/search/add}" th:method="POST" th:object="${locationItemForm}" class="mt-auto">
+                                <input type="hidden" name="name" th:value="${city.getName()}">
+                                <input type="hidden" name="lat" th:value="${city.getLat()}">
+                                <input type="hidden" name="lon" th:value="${city.getLon()}">
+                                <button type="submit" class="btn btn-primary w-100">Add</button>
+                            </form>
                         </div>
                     </div>
                 </div>

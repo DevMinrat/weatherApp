@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 @Service
 public class OpenWeatherService {
     private final WebClient webClient;
@@ -26,12 +28,12 @@ public class OpenWeatherService {
     }
 
     public Mono<WeatherResponseDTO> getWeatherByCity(String city) {
-        String url = String.format("%s?q=%s&appid=%s", WEATHER_BASE_URL, city, apiKey);
+        String url = String.format("%s?q=%s&units=metric&appid=%s", WEATHER_BASE_URL, city, apiKey);
         return webClient.get().uri(url).retrieve().bodyToMono(WeatherResponseDTO.class);
     }
 
-    public Mono<WeatherResponseDTO> getWeatherByCoordinates(double lat, double lon) {
-        String url = String.format("%s?lat=%s&lon=%s&appid=%s", WEATHER_BASE_URL, lat, lon, apiKey);
+    public Mono<WeatherResponseDTO> getWeatherByCoordinates(BigDecimal lat, BigDecimal lon) {
+        String url = String.format("%s?lat=%s&lon=%s&units=metric&appid=%s", WEATHER_BASE_URL, lat, lon, apiKey);
         return webClient.get().uri(url).retrieve().bodyToMono(WeatherResponseDTO.class);
     }
 
