@@ -6,6 +6,8 @@ import com.devminrat.weatherApp.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +24,11 @@ public class WeatherService {
         this.locationService = locationService;
     }
 
-    public List<WeatherResponseDTO> getWeather(User user) {
+    public Mono<List<WeatherResponseDTO>> getWeather(User user) {
         List<Location> locations = locationService.findAllByUser(user);
-        List<WeatherResponseDTO> weatherResponseDTOs = new ArrayList<>();
 
-        for (Location location : locations) {
-            WeatherResponseDTO resp = openWeatherService.getWeatherByCoordinates(location.getLatitude(), location.getLongitude()).block();
-            weatherResponseDTOs.add(resp);
-        }
-
-        return weatherResponseDTOs;
+        return Flux.fromIterable(locations)
+                .flatMap(l -> openWeatherService.getWeatherByCoordinates(l.getLatitude(), l.getLongitude()))
+                .collectList();
     }
 }

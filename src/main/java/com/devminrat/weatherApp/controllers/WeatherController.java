@@ -39,11 +39,7 @@ public class WeatherController {
         User user = (User) request.getAttribute("currentUser");
         modelAndView.addObject("userLogin", user.getLogin());
 
-        List<WeatherResponseDTO> weatherList = weatherService.getWeather(user);
-
-        weatherList.forEach(w -> {
-            System.out.println(w.getWeather());
-        });
+        List<WeatherResponseDTO> weatherList = weatherService.getWeather(user).block();
 
         modelAndView.addObject("weatherList", weatherList);
 
@@ -81,8 +77,8 @@ public class WeatherController {
         Location location = new Location();
         location.setOwner(user);
         location.setName(locationItemForm.getName());
-        location.setLongitude(locationItemForm.getLat());
-        location.setLatitude(locationItemForm.getLon());
+        location.setLongitude(locationItemForm.getLon());
+        location.setLatitude(locationItemForm.getLat());
 
         locationService.save(location);
 
