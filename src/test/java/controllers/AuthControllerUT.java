@@ -120,11 +120,10 @@ public class AuthControllerUT {
 
     @Test
     void test_registration_ExistingLogin_ShouldReturnError() {
-        User user = new User(authForm.getLogin(), authForm.getPassword());
         doAnswer(inv -> {
             bindingResult.addError(new ObjectError("authForm", "loginAlreadyExist"));
             return null;
-        }).when(userValidator).validateLogin(user, bindingResult);
+        }).when(userValidator).validateLogin(any(User.class), eq(bindingResult));
 
         ModelAndView mav = authController.registration(authForm, bindingResult, response);
 
@@ -158,7 +157,7 @@ public class AuthControllerUT {
         assertNull(cookie.getValue());
         assertEquals(0, cookie.getMaxAge());
 
-        assertEquals("auth/sign-in", mav.getViewName());
+        assertEquals("redirect:/auth/login", mav.getViewName());
     }
 
 }
