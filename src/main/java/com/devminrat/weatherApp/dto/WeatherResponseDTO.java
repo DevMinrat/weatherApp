@@ -14,6 +14,7 @@ public class WeatherResponseDTO {
     private Weather[] weather;
     private Main main;
     private String name;
+    private Sys sys;
 
     @Data
     @ToString
@@ -43,5 +44,11 @@ public class WeatherResponseDTO {
         private double tempMax;
         private int pressure;
         private int humidity;
+    }
+
+    @Data
+    @ToString
+    public static class Sys {
+        private String country;
     }
 }
