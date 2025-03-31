@@ -40,20 +40,24 @@
 
         <div>
             <div class="row">
-                <div th:each="weather: ${weatherList}" class="col-12 col-lg-3 col-md-6 mb-4">
+                <div th:each="locWeather: ${weatherList}" class="col-12 col-lg-3 col-md-6 mb-4">
                     <div class="card h-100 position-relative weather-card">
-                        <div class="position-absolute weather-card-delete-form">
+                        <form th:action="@{/weather/delete}" th:method="DELETE"
+                              class="position-absolute weather-card-delete-form">
+                            <input type="hidden" name="id" th:value="${locWeather.locationId}">
                             <button class="btn-close" aria-label="Delete"></button>
-                        </div>
+                        </form>
                         <img class="card-img-top img-fluid"
-                             th:src="'https://openweathermap.org/img/wn/' + ${weather.getWeather()[0].getIcon()} + '.png'"
+                             th:src="'https://openweathermap.org/img/wn/' + ${locWeather.weatherResp.weather[0].getIcon()} + '.png'"
                              alt="Weather icon">
                         <div class="card-body d-flex flex-column">
-                            <h1 class="card-text" th:text="${weather.getMain().getTemp()} + '°C'">temperature</h1>
-                            <h3 class="card-title" th:text="${weather.getName()}">Name</h3>
-                            <p class="card-text mb-1" th:text="'Feels like ' + ${weather.getMain().getFeelsLike()} + '°C. ' +
-                                ${weather.getWeather()[0].getDescription()}"></p>
-                            <p class="card-text mb-1" th:text="'Humidity: ' + ${weather.getMain().getHumidity() + '%'}">Humidity</p>
+                            <h1 class="card-text" th:text="${locWeather.weatherResp.main.temp} + '°C'">temperature</h1>
+                            <h3 class="card-title" th:text="${locWeather.weatherResp.name}">Name</h3>
+                            <p class="card-text mb-1"
+                               th:text="'Feels like ' + ${locWeather.weatherResp.main.feelsLike} + '°C. ' +
+                                     ${locWeather.weatherResp.weather[0].description}"></p>
+                            <p class="card-text mb-1"
+                               th:text="'Humidity: ' + ${locWeather.weatherResp.main.humidity} + '%'">Humidity</p>
                         </div>
                     </div>
                 </div>

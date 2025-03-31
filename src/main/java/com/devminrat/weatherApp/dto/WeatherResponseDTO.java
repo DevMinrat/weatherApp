@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Data
 @ToString
 public class WeatherResponseDTO {
+    private int id;
     private Coord coord;
     private Weather[] weather;
     private Main main;

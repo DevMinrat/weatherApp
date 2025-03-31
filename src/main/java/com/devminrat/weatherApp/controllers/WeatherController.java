@@ -2,6 +2,7 @@ package com.devminrat.weatherApp.controllers;
 
 import com.devminrat.weatherApp.dto.CityDTO;
 import com.devminrat.weatherApp.dto.LocationDTO;
+import com.devminrat.weatherApp.dto.LocationWeatherDTO;
 import com.devminrat.weatherApp.dto.WeatherResponseDTO;
 import com.devminrat.weatherApp.models.Location;
 import com.devminrat.weatherApp.models.User;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/weather")
@@ -39,7 +41,7 @@ public class WeatherController {
         User user = (User) request.getAttribute("currentUser");
         modelAndView.addObject("userLogin", user.getLogin());
 
-        List<WeatherResponseDTO> weatherList = weatherService.getWeather(user).block();
+        List<LocationWeatherDTO> weatherList = weatherService.getWeather(user).block();
 
         modelAndView.addObject("weatherList", weatherList);
 
@@ -81,6 +83,20 @@ public class WeatherController {
         location.setLatitude(locationItemForm.getLat());
 
         locationService.save(location);
+
+        return new ModelAndView("redirect:/weather");
+    }
+
+    @DeleteMapping("/delete")
+    public ModelAndView delete(@RequestParam int id, HttpServletRequest request) {
+        User user = (User) request.getAttribute("currentUser");
+        Optional<Location> location = locationService.findById(id);
+
+        if (location.isPresent() && location.get().getOwner().equals(user)) {
+            locationService.delete(id);
+        } else {
+            return new ModelAndView("redirect:/weather");
+        }
 
         return new ModelAndView("redirect:/weather");
     }
