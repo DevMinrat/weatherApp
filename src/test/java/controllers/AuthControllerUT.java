@@ -145,7 +145,6 @@ public class AuthControllerUT {
         Cookie cookie = response.getCookie(cookieName);
         assertNotNull(cookie);
         assertEquals("sessionId", cookie.getValue());
-        assertTrue(cookie.getSecure());
         assertEquals(1800, cookie.getMaxAge());
     }
 

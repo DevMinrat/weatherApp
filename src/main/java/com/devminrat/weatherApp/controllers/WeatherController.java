@@ -34,36 +34,28 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
+    @ModelAttribute("userLogin")
+    public String getUserLogin(HttpServletRequest request) {
+        User user = (User) request.getAttribute("currentUser");
+        return user.getLogin();
+    }
+
     @GetMapping
     public ModelAndView homePage(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("weather/index");
-
         User user = (User) request.getAttribute("currentUser");
-        modelAndView.addObject("userLogin", user.getLogin());
+        List<LocationWeatherDTO> weatherList = weatherService.getWeather(user);
 
-        List<LocationWeatherDTO> weatherList = weatherService.getWeather(user).block();
-
-        modelAndView.addObject("weatherList", weatherList);
-
-        return modelAndView;
+        return new ModelAndView("weather/index", "weatherList", weatherList);
     }
 
     @GetMapping("/search")
     public ModelAndView search(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("weather/search");
-
-        User user = (User) request.getAttribute("currentUser");
-        modelAndView.addObject("userLogin", user.getLogin());
-
-        return modelAndView;
+        return new ModelAndView("weather/search");
     }
 
     @PostMapping("/search")
     public ModelAndView search(@RequestParam String city, HttpServletRequest request, Model model) {
         ModelAndView modelAndView = new ModelAndView("weather/search");
-
-        User user = (User) request.getAttribute("currentUser");
-        modelAndView.addObject("userLogin", user.getLogin());
 
         List<CityDTO> cities = openWeatherService.getCitiesByName(city).toStream().toList();
 
