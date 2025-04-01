@@ -92,7 +92,7 @@ public class WeatherController {
         User user = (User) request.getAttribute("currentUser");
         Optional<Location> location = locationService.findById(id);
 
-        if (location.isPresent() && location.get().getOwner().equals(user)) {
+        if (location.isPresent() && location.get().getOwner().getId() == user.getId()) {
             locationService.delete(id);
         } else {
             return new ModelAndView("redirect:/weather");

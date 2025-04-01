@@ -129,7 +129,6 @@ public class AuthController {
         Cookie sessionCookie = new Cookie(COOKIE_NAME, session.getSessionId());
         sessionCookie.setPath("/");
         sessionCookie.setHttpOnly(true);
-        sessionCookie.setSecure(true);
         sessionCookie.setMaxAge(1800);
         response.addCookie(sessionCookie);
     }

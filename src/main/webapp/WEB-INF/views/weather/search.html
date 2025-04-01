@@ -1,41 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Weather Viewer – Homepage</title>
-    <link rel="stylesheet" th:href="@{/resources/css/bootstrap.css}">
-    <link rel="stylesheet" th:href="@{/resources/css/style.css}">
+<head th:replace="~{fragments/head :: commonHead('Weather Viewer – Search page')}">
 </head>
 <body>
 
-<nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img th:src="@{/resources/images/weather-app.png}" alt="" width="30" height="24"
-                 class="d-inline-block align-text-top">
-            Weather Tracker
-        </a>
-        <div class="d-flex align-items-center">
-            <span class="navbar-text me-3" th:text="${userLogin}">User login</span>
-            <form th:method="POST" th:action="@{/auth/logout}">
-                <button class="btn btn-outline-danger">Sign out</button>
-            </form>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{fragments/nav :: nav}"></div>
 
 <section id="page-content">
     <div class="container mt-4">
-        <div class="d-flex my-4">
-            <form class="input-group location-search-input-group me-3" th:method="POST" th:action="@{/weather/search}">
-                <input class="form-control" type="text" name="city" id="city" placeholder="Enter location" th:value="${city}" required>
-                <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
-                        onclick="this.previousElementSibling.value=''">
-                    &times;
-                </button>
-                <button class="btn btn-outline-success">Search</button>
-            </form>
-        </div>
+        <div th:replace="~{fragments/search :: div}"></div>
 
         <div>
             <h2>Locations:</h2>
@@ -62,11 +35,7 @@
     </div>
 </section>
 
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">
-    <div class="px-4">
-        <span>© Weather Viewer, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</span>
-    </div>
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
